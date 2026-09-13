@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborative Canvas</title>
+  <!-- Small empty favicon so the browser does not ask for /favicon.ico -->
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Toolbar with all the drawing controls -->
+  <div class="toolbar">
+
+    <!-- Brush tool (the only tool for now) -->
+    <button id="brush-button" class="active" title="Brush tool">🖌️ Brush</button>
+
+    <!-- Choose the brush color -->
+    <label for="color-picker">Color</label>
+    <input type="color" id="color-picker" value="#111111">
+
+    <!-- Choose the brush size -->
+    <label for="width-slider">Size</label>
+    <input type="range" id="width-slider" min="1" max="30" value="3">
+
+    <!-- Choose which room to draw in -->
+    <label for="room-input">Room</label>
+    <input type="text" id="room-input" value="default-room" maxlength="32" size="14">
+    <button id="join-room-button" title="Join the room">Join</button>
+
+    <!-- Remove everything from the canvas (GLOBAL for the room) -->
+    <button id="undo-button" disabled title="Undo (global)">↩ Undo</button>
+    <button id="redo-button" disabled title="Redo (global)">↪ Redo</button>
+    <button id="clear-button" title="Clear the canvas (global)">🧹 Clear</button>
+
+    <!-- Shows if the browser is connected to the server -->
+    <div class="connection-status">
+      <span id="status-dot" class="disconnected"></span>
+      <span id="status-text">Disconnected</span>
+    </div>
+
+  </div>
+
+  <!--
+    Two canvases stacked on top of each other:
+    #canvas holds the drawing, #cursor-canvas shows remote cursors.
+-->
+  <div class="main-area">
+
+    <div id="canvas-wrap">
+      <canvas id="canvas"></canvas>
+      <canvas id="cursor-canvas"></canvas>
+    </div>
+
+    <aside class="sidebar">
+      <!-- The current user's identity (assigned by the server) -->
+      <div class="current-user-box">
+        <span id="my-color-dot" class="user-dot"></span>
+        <span id="my-id">Your ID: connecting...</span>
+      </div>
+
+      <!-- Which room we are currently drawing in -->
+      <div id="current-room" class="current-room">Room: ...</div>
+
+      <!-- Everyone who is currently online -->
+      <h3 id="online-header">Online Users (0)</h3>
+      <ul id="online-users-list"></ul>
+
+      <!-- Dev metrics, hidden by default (press "i" to toggle) -->
+      <div id="debug-stats" class="debug-stats"></div>
+    </aside>
+
+  </div>
+
+  <!-- Load order matters: canvas.js, websocket.js, then main.js. -->
+  <script src="canvas.js"></script>
+  <script src="websocket.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

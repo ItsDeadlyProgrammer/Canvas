@@ -1,0 +1,13 @@
+# Dependencies installed by "npm install"
+node_modules/
+
+# Log files
+*.log
+
+# Temporary Chrome profiles
+chrome-profile*/
+cc-browser-*/
+
+# OS files
+.DS_Store
+Thumbs.db

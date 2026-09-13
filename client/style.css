@@ -1,0 +1,263 @@
+/* Reset the default spacing the browser adds */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Use a simple column layout: toolbar on top, canvas below */
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+}
+
+/* ---------------- Toolbar ---------------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap; /* wrap controls on narrow windows */
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background-color: #2b2b2b;
+  color: #eee;
+  font-size: 14px;
+  user-select: none;
+}
+
+.toolbar button {
+  background-color: #3a3a3a;
+  color: #eee;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background-color: #4a4a4a;
+}
+
+/* The tool that is currently selected */
+.toolbar button.active {
+  background-color: #4c8bfd;
+  color: white;
+}
+
+/* Disabled buttons (Undo/Redo when there is nothing to undo/redo) */
+.toolbar button:disabled {
+  background-color: #262626;
+  color: #777;
+  cursor: not-allowed;
+}
+
+.toolbar label {
+  color: #aaa;
+}
+
+/* Color picker */
+input[type="color"] {
+  width: 36px;
+  height: 28px;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* Size slider */
+input[type="range"] {
+  width: 120px;
+  accent-color: #4c8bfd;
+}
+
+/* Connection status indicator (green = connected, red = disconnected) */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+#status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e74c3c; /* red by default */
+}
+
+#status-dot.connected {
+  background-color: #2ecc71; /* green */
+}
+
+/* Amber while the client is waiting to reconnect */
+#status-dot.reconnecting {
+  background-color: #f39c12;
+}
+
+/* Room name input in the toolbar */
+#room-input {
+  width: 130px;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1f1f1f;
+  color: #eee;
+  font-size: 13px;
+}
+
+#room-input:focus {
+  outline: 2px solid #4c8bfd;
+}
+
+/* ---------------- Layout ---------------- */
+
+/* The drawing area + the online users sidebar. */
+.main-area {
+  flex: 1 1 auto; /* take all the space left below the toolbar */
+  display: flex;
+  background-color: white;
+}
+
+/* Wrapper that holds the two stacked canvases. */
+#canvas-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#canvas {
+  display: block; /* so the canvas has no extra whitespace below it */
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none; /* let touch events draw instead of scrolling */
+}
+
+/*
+  Cursor layer: a transparent canvas on top of the drawing canvas.
+  pointer-events: none lets clicks and drawing pass through to #canvas.
+*/
+#cursor-canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ---------------- Sidebar ---------------- */
+
+.sidebar {
+  width: 220px;
+  background-color: #f5f5f5;
+  border-left: 1px solid #ddd;
+  padding: 14px;
+  overflow-y: auto;
+  font-size: 13px;
+}
+
+/* The "Your ID" box at the top of the sidebar. */
+.current-user-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+/* A small circle showing a user's assigned color. */
+.user-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* The current room, shown in the sidebar. */
+.current-room {
+  margin-bottom: 18px;
+  font-weight: bold;
+  color: #333;
+  overflow-wrap: anywhere; /* long room names must not break the layout */
+}
+
+#online-header {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+}
+
+#online-users-list {
+  list-style: none;
+  padding: 0;
+}
+
+#online-users-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  color: #444;
+}
+
+/* ---------------- Dev metrics overlay ---------------- */
+
+/* Hidden by default; press "i" (outside a text field) to toggle. */
+.debug-stats {
+  display: none;
+  margin-top: 18px;
+  padding: 8px;
+  background-color: #eee;
+  border-radius: 6px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #555;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.debug-stats.visible {
+  display: block;
+}
+
+/* ---------------- Small screens ---------------- */
+
+@media (max-width: 700px) {
+  .toolbar {
+    padding: 8px 10px;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .toolbar button {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  input[type="range"] {
+    width: 90px;
+  }
+
+  #room-input {
+    width: 100px;
+  }
+
+  .sidebar {
+    width: 160px;
+    padding: 10px;
+    font-size: 12px;
+  }
+}
