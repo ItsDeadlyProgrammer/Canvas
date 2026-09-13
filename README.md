@@ -1,11 +1,10 @@
 # 🎨 Collaborative Canvas
 
-A real-time collaborative drawing canvas built with **only** vanilla JavaScript.
+## Live Demo
+Link : https://canvas-37ew.onrender.com/
 
-This is **Step 6** of the project. Everything from Steps 1–5 still works
-(drawing, colors, cursors, online users, global undo/redo/clear, late-join
-sync, resize redraw, rooms, room switching, reconnection), and on top of
-that:
+## Overview
+A real-time collaborative drawing canvas built with **only** vanilla JavaScript.
 
 - **Rooms** — users in different rooms never see each other's drawings,
   cursors, or user lists
@@ -28,7 +27,7 @@ that:
 - **UI polish (Step 6)** — the toolbar wraps on narrow screens and controls
   shrink for mobile widths
 
-## Tech stack (strict)
+## Tech stack 
 
 | Layer    | Technology                          |
 | -------- | ----------------------------------- |
@@ -158,13 +157,9 @@ is not per-user (see limitations).
   a small "dev stats" box in the sidebar: points/batches sent and received,
   approximate batches/s, stroke count, full-redraw count and the duration
   of the last full redraw (`window.__canvasStats` is also readable in the
-  browser console). It is a development tool and is hidden by default.
+  browser console).
 
-Rough numbers observed while developing (1280×800 Chrome window,
-localhost): a 1001-point stroke in five 200-point batches round-trips in
-a few milliseconds; a full-canvas redraw stays well under 1 ms with
-around sixteen strokes on the canvas; hundreds of tiny (sub-threshold)
-pointer movements produce almost no extra points.
+
 
 ## Touch and stylus support
 
@@ -185,31 +180,7 @@ server arrival order** — there is no merge logic (no CRDT/OT). Global
 undo/redo/clear also process in arrival order, so every client converges to
 the same deterministic state.
 
-## Known limitations (Step 6)
 
-- **No persistence** — all state is in memory; a server restart empties every
-  room.
-- **Clear is not undoable** (documented above).
-- **No per-user undo** — undo is always global by design.
-- **No resume of unfinished strokes** — a stroke interrupted by a disconnect
-  is dropped on both sides (intentional and documented).
-- **No rate limiting / auth** — validation caps sizes and ranges to prevent
-  accidental abuse, but there is no authentication or per-user rate limiting.
-- **Rooms live in memory until the server restarts** — an empty room keeps its
-  drawing, so leaving and coming back restores the room exactly as it was.
-  The flip side: rooms and their history are never garbage-collected while
-  the server runs, and a server restart wipes every room (no persistence).
-- **Clear while someone is drawing** — Clear wipes the room's active strokes
-  too. A stroke that is in progress during a Clear is dropped (the drawer
-  keeps seeing it locally until the stroke ends, but it is never committed
-  to history).
-- **Broadcast fanout** — the server sends every message to every client in
-  the room, and each full redraw replays the whole operation list. Fine for
-  the assignment's scale; large rooms would need the optimizations listed
-  in ARCHITECTURE.md ("Scalability note").
-- **Touch not checked on hardware** — mouse and touch share one Pointer
-  Events code path, but no physical phone/tablet was used during
-  development.
 
 ## Project structure
 
